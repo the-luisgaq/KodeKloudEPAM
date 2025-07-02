@@ -52,9 +52,16 @@ Users accessing the site are redirected to login with their EPAM Entra ID accoun
 ## 🧪 Testing Locally
 
 ```bash
-cd frontend
+cd src/frontend
 npm install
 npm run dev
+```
+
+If you see an error like `ENOSPC: System limit for number of file watchers reached`,
+start Vite with polling enabled:
+
+```bash
+CHOKIDAR_USEPOLLING=true npm run dev
 ```
 
 ## 🔁 Triggering the Report Generation
