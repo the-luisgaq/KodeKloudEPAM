@@ -15,7 +15,12 @@
     "react-router-dom": "^7.6.2",
     "react-window": "^1.8.11",
     "recharts": "^2.15.3",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "@epam/assets": "latest",
+    "@epam/uui": "latest",
+    "@epam/uui-components": "latest",
+    "@epam/uui-core": "latest",
+    "sass": "^1.78.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
