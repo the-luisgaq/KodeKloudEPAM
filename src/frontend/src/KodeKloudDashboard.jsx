@@ -89,9 +89,8 @@ export default function KodeKloudDashboard({ user }) {
 
   const charts = [
     { title: 'Top 5 Users by Lessons', data: getTopLessons(data) },
-    { title: 'Top 5 in XPORT1-MX', data: getTopLessons(data, 'XPORT1-MX') },
     { title: 'Top 5 in XPORT2-MX', data: getTopLessons(data, 'XPORT2-MX') },
-    { title: 'Top 5 in MXEPAMGOOGLE', data: getTopLessons(data, 'MXEPAMGOOGLE') },
+    { title: 'Top 5 in XPORT1-MX', data: getTopLessons(data, 'XPORT1-MX') },
   ];
 
   const themeClasses = darkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900';
@@ -170,7 +169,10 @@ export default function KodeKloudDashboard({ user }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 px-4">
         {charts.map((chart, index) => (
-          <section key={index} className={`p-6 rounded-md border ${chartTheme}`}>
+          <section
+            key={index}
+            className={`p-6 rounded-md border ${chartTheme} ${index === 0 ? 'md:col-span-2' : ''}`}
+          >
             <h2 className="text-lg font-semibold mb-4">{chart.title}</h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={chart.data} layout="vertical">
