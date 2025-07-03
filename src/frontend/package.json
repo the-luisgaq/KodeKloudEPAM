@@ -20,6 +20,7 @@
     "@epam/uui": "latest",
     "@epam/uui-components": "latest",
     "@epam/uui-core": "latest",
+    "@epam/promo": "latest",
     "sass": "^1.78.0"
   },
   "devDependencies": {
