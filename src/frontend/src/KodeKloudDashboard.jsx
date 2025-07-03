@@ -8,6 +8,7 @@ export default function KodeKloudDashboard({ user }) {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState('all');
   const [sortKey, setSortKey] = useState('Video Hours Watched');
+  const [sortDirection, setSortDirection] = useState('asc');
   const [search, setSearch] = useState('');
   const [darkMode, setDarkMode] = useState(false);
   const licenseLimit = 40;
@@ -52,10 +53,15 @@ export default function KodeKloudDashboard({ user }) {
 
   const filteredAll = data.filter(user => user.Program !== 'LPC');
   const sorted = [...filteredAll].sort((a, b) => {
-    if (sortKey === 'Name' || sortKey === 'Program') {
-      return String(a[sortKey]).localeCompare(String(b[sortKey]));
+    let result;
+    if (sortKey === 'Active') {
+      result = isActive(a) === isActive(b) ? 0 : isActive(a) ? 1 : -1;
+    } else if (['Name', 'Program', 'Email', 'Status'].includes(sortKey)) {
+      result = String(a[sortKey]).localeCompare(String(b[sortKey]));
+    } else {
+      result = (parseFloat(a[sortKey]) || 0) - (parseFloat(b[sortKey]) || 0);
     }
-    return (b[sortKey] || 0) - (a[sortKey] || 0);
+    return sortDirection === 'asc' ? result : -result;
   });
 
   const filtered = sorted.filter(user => {
@@ -77,6 +83,15 @@ export default function KodeKloudDashboard({ user }) {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Usage');
     XLSX.writeFile(wb, 'kodekloud_usage.xlsx');
+  };
+
+  const handleSort = key => {
+    if (sortKey === key) {
+      setSortDirection(prev => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortDirection('asc');
+    }
   };
 
   const getTopLessons = (dataset, program = null) => {
@@ -119,7 +134,13 @@ export default function KodeKloudDashboard({ user }) {
             onChange={e => setSearch(e.target.value)}
             className={`px-2 py-1 rounded ${inputTheme}`}
           />
-          <select onChange={e => setSortKey(e.target.value)} className={`px-2 py-1 rounded ${inputTheme}`}>
+          <select
+            onChange={e => {
+              setSortKey(e.target.value);
+              setSortDirection('asc');
+            }}
+            className={`px-2 py-1 rounded ${inputTheme}`}
+          >
             <option value="Video Hours Watched">Video Hours</option>
             <option value="Name">Name</option>
             <option value="Program">Program</option>
@@ -191,14 +212,30 @@ export default function KodeKloudDashboard({ user }) {
         <table className="min-w-full table-auto border border-gray-300">
           <thead className="bg-[#052E57] text-white">
             <tr>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Email</th>
-              <th className="px-4 py-2">Lessons</th>
-              <th className="px-4 py-2">Video Hours</th>
-              <th className="px-4 py-2">Labs</th>
-              <th className="px-4 py-2">Program</th>
-              <th className="px-4 py-2">Active</th>
-              <th className="px-4 py-2">Status</th>
+              <th onClick={() => handleSort('Name')} className="px-4 py-2 cursor-pointer">
+                Name {sortKey === 'Name' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
+              <th onClick={() => handleSort('Email')} className="px-4 py-2 cursor-pointer">
+                Email {sortKey === 'Email' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
+              <th onClick={() => handleSort('Lessons Completed')} className="px-4 py-2 cursor-pointer">
+                Lessons {sortKey === 'Lessons Completed' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
+              <th onClick={() => handleSort('Video Hours Watched')} className="px-4 py-2 cursor-pointer">
+                Video Hours {sortKey === 'Video Hours Watched' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
+              <th onClick={() => handleSort('Labs Completed')} className="px-4 py-2 cursor-pointer">
+                Labs {sortKey === 'Labs Completed' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
+              <th onClick={() => handleSort('Program')} className="px-4 py-2 cursor-pointer">
+                Program {sortKey === 'Program' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
+              <th onClick={() => handleSort('Active')} className="px-4 py-2 cursor-pointer">
+                Active {sortKey === 'Active' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
+              <th onClick={() => handleSort('Status')} className="px-4 py-2 cursor-pointer">
+                Status {sortKey === 'Status' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
             </tr>
           </thead>
           <tbody>
