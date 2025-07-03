@@ -3,6 +3,14 @@ import * as XLSX from 'xlsx';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from 'recharts';
+import {
+  FlexRow,
+  FlexCell,
+  Panel,
+  Button,
+  LinkButton,
+  FlexSpacer
+} from '@epam/promo';
 
 export default function KodeKloudDashboard({ user }) {
   const [data, setData] = useState([]);
@@ -117,78 +125,78 @@ export default function KodeKloudDashboard({ user }) {
 
   return (
     <div className={`min-h-screen ${themeClasses} p-4`}>
-      <header className="bg-gradient-to-r from-primary to-primary-dark p-6 shadow mb-4 flex flex-wrap justify-between items-center text-white sticky top-0 z-10 font-semibold">
-        <div className="flex items-center gap-4">
-          <img
-            src="https://www.epam.com/content/dam/epam/homepage/epam_logo_light.svg"
-            alt="EPAM Logo"
-            className="h-10 invert"
-          />
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <input
-            type="text"
-            placeholder="Search by name..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className={`px-2 py-1 rounded ${inputTheme}`}
-          />
-          <select
-            onChange={e => {
-              setSortKey(e.target.value);
-              setSortDirection('asc');
-            }}
-            className={`px-2 py-1 rounded ${inputTheme}`}
-          >
-            <option value="Video Hours Watched">Video Hours</option>
-            <option value="Name">Name</option>
-            <option value="Program">Program</option>
-          </select>
-          <button onClick={() => setFilter('all')} className="bg-primary text-white px-3 py-1 rounded hover:bg-primary-dark">All</button>
-          <button onClick={() => setFilter('active')} className="bg-primary text-white px-3 py-1 rounded hover:bg-primary-dark">Active</button>
-          <button onClick={() => setFilter('inactive')} className="bg-primary text-white px-3 py-1 rounded hover:bg-primary-dark">Inactive</button>
-          <button onClick={exportToExcel} className="bg-[#007A33] text-white px-3 py-1 rounded hover:bg-[#00662b]">Export to Excel</button>
-          <button onClick={() => setDarkMode(!darkMode)} className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">
-            {darkMode ? 'Light Mode' : 'Dark Mode'}
-          </button>
-
-          {user && (
-            <div className="flex flex-col text-sm ml-4">
-              <span>Hola, {user.user_claims?.find(c => c.typ === 'name')?.val || user.userDetails}</span>
-              <span>{user.user_claims?.find(c => c.typ === 'preferred_username')?.val}</span>
-              <a
-                href={`https://login.microsoftonline.com/b41b72d0-4e9f-4c26-8a69-f949f367c91d/oauth2/v2.0/logout?post_logout_redirect_uri=${window.location.origin}/signed-out`}
-                className="bg-red-600 text-white px-2 py-1 mt-1 rounded hover:bg-red-700 text-center"
-              >
-                Cerrar sesión
-              </a>
-            </div>
-          )}
-        </div>
+      <header className="sticky top-0 z-10 mb-4">
+        <Panel background="night50" shadow cx="p-4 text-white">
+          <FlexRow columnGap="12" vPadding="12" alignItems="center">
+            <img
+              src="https://www.epam.com/content/dam/epam/homepage/epam_logo_light.svg"
+              alt="EPAM Logo"
+              className="h-10 invert"
+            />
+            <FlexSpacer />
+            <input
+              type="text"
+              placeholder="Search by name..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className={`px-2 py-1 rounded ${inputTheme}`}
+            />
+            <select
+              onChange={e => {
+                setSortKey(e.target.value);
+                setSortDirection('asc');
+              }}
+              className={`px-2 py-1 rounded ${inputTheme}`}
+            >
+              <option value="Video Hours Watched">Video Hours</option>
+              <option value="Name">Name</option>
+              <option value="Program">Program</option>
+            </select>
+            <Button caption="All" color="blue" onClick={() => setFilter('all')} />
+            <Button caption="Active" color="blue" onClick={() => setFilter('active')} />
+            <Button caption="Inactive" color="blue" onClick={() => setFilter('inactive')} />
+            <Button caption="Export" color="green" onClick={exportToExcel} />
+            <Button caption={darkMode ? 'Light Mode' : 'Dark Mode'} color="gray" onClick={() => setDarkMode(!darkMode)} />
+            {user && (
+              <FlexCell width="auto" cx="ml-4">
+                <div className="flex flex-col text-sm">
+                  <span>Hola, {user.user_claims?.find(c => c.typ === 'name')?.val || user.userDetails}</span>
+                  <span>{user.user_claims?.find(c => c.typ === 'preferred_username')?.val}</span>
+                  <LinkButton
+                    caption="Cerrar sesión"
+                    color="red"
+                    href={`https://login.microsoftonline.com/b41b72d0-4e9f-4c26-8a69-f949f367c91d/oauth2/v2.0/logout?post_logout_redirect_uri=${window.location.origin}/signed-out`}
+                  />
+                </div>
+              </FlexCell>
+            )}
+          </FlexRow>
+        </Panel>
       </header>
 
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className={`p-4 rounded-lg shadow hover:shadow-lg ${cardTheme}`}>
-          <p className={`${cardTitle}`}>Total Users</p>
-          <p className="text-3xl font-bold">{filteredAll.length}</p>
-        </div>
-        <div className={`p-4 rounded-lg shadow hover:shadow-lg ${cardTheme}`}>
-          <p className={`${cardTitle}`}>Active Licenses</p>
-          <p className="text-3xl font-bold">{activeCount} / {licenseLimit}</p>
-        </div>
-        <div className={`p-4 rounded-lg shadow hover:shadow-lg ${cardTheme}`}>
-          <p className={`${cardTitle}`}>No Progress</p>
-          <p className="text-3xl font-bold text-red-600 dark:text-red-400">{noActivityCount}</p>
-        </div>
-        <div className={`p-4 rounded-lg shadow hover:shadow-lg ${cardTheme}`}>
-          <p className={`${cardTitle}`}>Avg. Video Hours</p>
-          <p className="text-3xl font-bold">{averageVideoHours}</p>
-        </div>
-      </section>
+      <Panel background="white" shadow cx="mb-6">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className={`p-4 rounded-lg shadow hover:shadow-lg ${cardTheme}`}>
+            <p className={`${cardTitle}`}>Total Users</p>
+            <p className="text-3xl font-bold">{filteredAll.length}</p>
+          </div>
+          <div className={`p-4 rounded-lg shadow hover:shadow-lg ${cardTheme}`}>
+            <p className={`${cardTitle}`}>Active Licenses</p>
+            <p className="text-3xl font-bold">{activeCount} / {licenseLimit}</p>
+          </div>
+          <div className={`p-4 rounded-lg shadow hover:shadow-lg ${cardTheme}`}>
+            <p className={`${cardTitle}`}>No Progress</p>
+            <p className="text-3xl font-bold text-red-600 dark:text-red-400">{noActivityCount}</p>
+          </div>
+          <div className={`p-4 rounded-lg shadow hover:shadow-lg ${cardTheme}`}>
+            <p className={`${cardTitle}`}>Avg. Video Hours</p>
+            <p className="text-3xl font-bold">{averageVideoHours}</p>
+          </div>
+        </section>
+      </Panel>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 px-4">
+      <Panel background="white" shadow cx="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 px-4">
         {charts.map((chart, index) => (
           <section
             key={index}
@@ -206,9 +214,9 @@ export default function KodeKloudDashboard({ user }) {
             </ResponsiveContainer>
           </section>
         ))}
-      </div>
+      </Panel>
 
-      <div className="overflow-x-auto px-4">
+      <Panel background="white" shadow cx="overflow-x-auto px-4">
         <table className="min-w-full table-auto border border-gray-300">
           <thead className="bg-[#052E57] text-white">
             <tr>
@@ -264,7 +272,7 @@ export default function KodeKloudDashboard({ user }) {
             ))}
           </tbody>
         </table>
-      </div>
+      </Panel>
 
       <footer className="text-center mt-8 p-4 text-sm text-gray-500 border-t border-gray-300">
         Portal created by Luis Alvarez (luis_alvarez1@epam.com)
