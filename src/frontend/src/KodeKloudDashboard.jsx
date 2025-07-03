@@ -103,7 +103,7 @@ export default function KodeKloudDashboard({ user }) {
 
   return (
     <div className={`min-h-screen ${themeClasses} p-4`}>
-      <header className="bg-[#052E57] p-6 shadow mb-4 flex flex-wrap justify-between items-center text-white sticky top-0 z-10">
+      <header className="bg-gradient-to-r from-primary to-primary-dark p-6 shadow mb-4 flex flex-wrap justify-between items-center text-white sticky top-0 z-10 font-semibold">
         <div className="flex items-center gap-4">
           <img
             src="https://www.epam.com/content/dam/epam/homepage/epam_logo_light.svg"
@@ -125,9 +125,9 @@ export default function KodeKloudDashboard({ user }) {
             <option value="Name">Name</option>
             <option value="Program">Program</option>
           </select>
-          <button onClick={() => setFilter('all')} className="bg-[#0072CE] text-white px-3 py-1 rounded hover:bg-[#005fa3]">All</button>
-          <button onClick={() => setFilter('active')} className="bg-[#0072CE] text-white px-3 py-1 rounded hover:bg-[#005fa3]">Active</button>
-          <button onClick={() => setFilter('inactive')} className="bg-[#0072CE] text-white px-3 py-1 rounded hover:bg-[#005fa3]">Inactive</button>
+          <button onClick={() => setFilter('all')} className="bg-primary text-white px-3 py-1 rounded hover:bg-primary-dark">All</button>
+          <button onClick={() => setFilter('active')} className="bg-primary text-white px-3 py-1 rounded hover:bg-primary-dark">Active</button>
+          <button onClick={() => setFilter('inactive')} className="bg-primary text-white px-3 py-1 rounded hover:bg-primary-dark">Inactive</button>
           <button onClick={exportToExcel} className="bg-[#007A33] text-white px-3 py-1 rounded hover:bg-[#00662b]">Export to Excel</button>
           <button onClick={() => setDarkMode(!darkMode)} className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">
             {darkMode ? 'Light Mode' : 'Dark Mode'}
@@ -178,7 +178,7 @@ export default function KodeKloudDashboard({ user }) {
                 <XAxis type="number" stroke={darkMode ? '#fff' : '#000'} />
                 <YAxis type="category" dataKey="name" width={150} stroke={darkMode ? '#fff' : '#000'} />
                 <Tooltip />
-                <Bar dataKey="value" fill="#0072CE" />
+                <Bar dataKey="value" fill="#005BBB" />
               </BarChart>
             </ResponsiveContainer>
           </section>
